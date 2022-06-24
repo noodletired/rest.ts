@@ -33,6 +33,7 @@ Compatibility between rest.ts and runtypes:
 |---------|----------
 |< 0.6.0  |  2.x.x
 |>=0.6.0  |  4.x.x
+|>=0.7.0  |  6.x.x
 
 
 ## Contributing
