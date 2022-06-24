@@ -1,6 +1,6 @@
 import * as rt from 'runtypes';
 import { defineAPI, GET, POST, PUT, PATCH, DELETE } from 'rest-ts-core';
-import { QueryParamsResponse, TodoItem, SavedTodoItem, SimpleMessage, PathData, ClassBasedRequest, ClassBasedResponse, protoBasedResponse, protoBasedRequest } from './DTOs';
+import { QueryParamsResponse, TodoItem, SavedTodoItem, DatedTodoItem, SimpleMessage, PathData, ClassBasedRequest, ClassBasedResponse, protoBasedResponse, protoBasedRequest } from './DTOs';
 
 /**
  * This is the API definition that will be shared between the backend and the frontend.
@@ -32,7 +32,7 @@ export const todoAPI = defineAPI({
         .query(rt.Record({
             'mandatory': rt.String,
             'union': rt.Union(rt.Literal('true'), rt.Literal('false')),
-            'optional': rt.Union(rt.String, rt.Undefined)
+            'optional': rt.Optional(rt.String) // rt.Union(rt.String, rt.Undefined) actually expects the key...
         }))
         .response(QueryParamsResponse),
 
@@ -44,6 +44,10 @@ export const todoAPI = defineAPI({
     simpleRequestBody: POST `/simpleBody`
         .body(TodoItem)
         .response(SavedTodoItem),
+
+    constrainedRequestBody: GET `/constrainedBody`
+        .body(DatedTodoItem)
+        .response(DatedTodoItem),
 
     noRepsonseEndpoint: PUT `/noResponse`,
 

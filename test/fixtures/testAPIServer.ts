@@ -24,6 +24,9 @@ export const router = buildRouter(todoAPI, (builder) => builder
             ...req.body
         };
     })
+    .constrainedRequestBody(async (req) => {
+        return { ...req.body };
+    })
     .simpleGet(() => 'OK')
     .simplePatch(() => 'OK')
     .simplePost(() => 'OK')
