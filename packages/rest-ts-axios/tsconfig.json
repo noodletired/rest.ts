@@ -2,7 +2,11 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "dist",
-        "baseUrl": ".."
+        "baseUrl": "..",
+        "lib": [
+            "es2015",
+            "dom"
+        ]
     },
     "include": [
         "src/**/*.ts"

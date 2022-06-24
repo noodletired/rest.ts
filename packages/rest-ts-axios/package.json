@@ -5,7 +5,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "peerDependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.27.2",
         "rest-ts-core": "^0.6.1"
     },
     "files": [

@@ -17,11 +17,12 @@ type PromiseOrValue<T> = PromiseLike<T> | T;
 /**
  * An express Request with proper typings.
  */
-interface TypedRequest<T extends EndpointDefinition> extends express.Request {
-    body: ExtractRuntimeType<T['body']>;
-    params: Tuple2Dict<T['params']>;
-    query: ExtractRuntimeType<T['query']>;
-}
+type TypedRequest<T extends EndpointDefinition> = express.Request<
+    Tuple2Dict<T['params']>,
+    ExtractRuntimeType<T['response']>,
+    ExtractRuntimeType<T['body']>,
+    ExtractRuntimeType<T['query']>
+>;
 
 /**
  * An individual endpoint handler.
@@ -220,11 +221,12 @@ function makeHandler<T extends EndpointDefinition>(def: T, fn: RouteHandler<T>) 
     };
 }
 
-function sanitizeIncomingRequest<T extends EndpointDefinition>(def: T, req: express.Request): TypedRequest<T> {
+function sanitizeIncomingRequest<T extends EndpointDefinition>(def: T, req: express.Request<any, unknown, unknown, unknown>): TypedRequest<T> {
     if (req.body != null) {
         try {
             req.body = def.body == null ? null : deserialize(def.body, req.body);
         } catch (e) {
+            // @ts-expect-error: e can probably be coerced into a string
             throw new BadRequestHttpException(e);
         }
     }   
@@ -232,6 +234,7 @@ function sanitizeIncomingRequest<T extends EndpointDefinition>(def: T, req: expr
         try {
             req.query = def.query == null ? null : deserialize(def.query, req.query);
         } catch (e) {
+            // @ts-expect-error: e can probably be coerced into a string
             throw new BadRequestHttpException(e);
         }
     }

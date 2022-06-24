@@ -4,7 +4,6 @@ import * as express from 'express';
 import * as http from 'http';
 import { json } from 'body-parser';
 import { ClassBasedRequest } from './fixtures/DTOs';
-import { match } from 'minimatch';
 
 const port = 3000
 const apiMountPoint = '/api';
@@ -17,7 +16,7 @@ beforeAll(async () => {
     app.use(apiMountPoint, router);
     server.on('request', app);
     
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
         server.listen(port, resolve);
     });
 });
@@ -107,6 +106,19 @@ test('request body', async () => {
     expect(response.data.id).toEqual('deadbeef');
 });
 
+test('constrained request body', async () => {
+	const dateString = new Date().toISOString();
+	const response = await client.constrainedRequestBody({
+			body: {
+					title: 'abc',
+					done: dateString,
+					type: 'shopping'
+			}
+	});
+	expect(response.data.title).toEqual('abc');
+	expect(response.data.done).toEqual(dateString);
+	expect(response.data.type).toEqual('shopping');
+});
 
 test('bad request body', async () => {
     await expect(client.simpleRequestBody({
@@ -124,6 +136,7 @@ test('no response', async () => {
         await client.noRepsonseEndpoint();
         fail('Expected an exception');
     } catch (e) {
+        // @ts-expect-error: unknown error type
         expect(e.response.status).toEqual(404);
     }
 });

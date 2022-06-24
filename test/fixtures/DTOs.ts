@@ -25,6 +25,13 @@ export const SavedTodoItem = rt.Intersect(
     })
 );
 
+export const DatedTodoItem = TodoItem
+    .omit('done')
+    .extend({ 'done': rt.String.withConstraint(
+        s => !Number.isNaN(Date.parse(s)),
+        { name: 'DateString' })
+    });
+
 export const SimpleMessage = rt.Record({
     message: rt.String
 });
