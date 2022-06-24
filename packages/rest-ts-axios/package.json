@@ -1,16 +1,15 @@
 {
     "name": "@noodletired/rest-ts-axios",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "Type-safe rest API definitions for axios",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "peerDependencies": {
         "axios": "^0.27.2",
-        "rest-ts-core": "^0.7.0"
+        "@noodletired/rest-ts-core": "^0.7.1"
     },
     "files": [
-        "dist",
-        "src"
+        "dist"
     ],
     "repository": {
         "type": "git",

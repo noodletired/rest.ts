@@ -1,16 +1,15 @@
 {
     "name": "@noodletired/rest-ts-express",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "Type-safe rest API definitions for express",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "peerDependencies": {
         "express": "^4.18.1",
-        "rest-ts-core": "^0.7.0"
+        "@noodletired/rest-ts-core": "^0.7.1"
     },
     "files": [
-        "dist",
-        "src"
+        "dist"
     ],
     "scripts": {
         "tsc": "tsc",
