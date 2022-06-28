@@ -3,7 +3,7 @@
  */
 
 import { AxiosResponse, AxiosInstance, AxiosRequestConfig } from 'axios';
-import { ApiDefinition, EndpointDefinition, Tuple2Dict, ExtractRuntimeType, buildPathnameFromParams, MakeUndefineableKeysOptional } from 'rest-ts-core';
+import { ApiDefinition, EndpointDefinition, Tuple2Dict, ExtractRuntimeType, buildPathnameFromParams, MakeUndefineableKeysOptional } from '@noodletired/rest-ts-core';
 
 type IsInRecord<T, Key extends keyof T> = T extends Record<Key, any> ? Key : never;
 type KeyIfDefined<T, Key extends keyof T> = Key extends IsInRecord<T, Key> ? Key : never;

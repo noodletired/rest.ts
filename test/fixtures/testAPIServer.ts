@@ -1,5 +1,5 @@
 import { todoAPI } from './testAPI';
-import { buildRouter } from 'rest-ts-express';
+import { buildRouter } from '@noodletired/rest-ts-express';
 
 export const router = buildRouter(todoAPI, (builder) => builder
     .simpleQueryParams((req) => {

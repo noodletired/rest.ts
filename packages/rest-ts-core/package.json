@@ -1,6 +1,6 @@
 {
     "name": "@noodletired/rest-ts-core",
-    "version": "0.7.1",
+    "version": "0.7.3",
     "description": "Type-safe rest API definitions to share",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

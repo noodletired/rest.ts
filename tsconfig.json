@@ -15,9 +15,7 @@
             "es2015"
         ],
         "paths": {
-            "rest-ts-axios": ["rest-ts-axios/src"],
-            "rest-ts-core": ["rest-ts-core/src"],
-            "rest-ts-express": ["rest-ts-express/src"],
+            "@noodletired/rest-ts-*": ["./rest-ts-*"]
         }
     }
 }

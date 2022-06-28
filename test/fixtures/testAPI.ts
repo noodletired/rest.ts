@@ -1,5 +1,5 @@
 import * as rt from 'runtypes';
-import { defineAPI, GET, POST, PUT, PATCH, DELETE } from 'rest-ts-core';
+import { defineAPI, GET, POST, PUT, PATCH, DELETE } from '@noodletired/rest-ts-core';
 import { QueryParamsResponse, TodoItem, SavedTodoItem, DatedTodoItem, SimpleMessage, PathData, ClassBasedRequest, ClassBasedResponse, protoBasedResponse, protoBasedRequest } from './DTOs';
 
 /**

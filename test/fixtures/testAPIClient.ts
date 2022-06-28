@@ -1,4 +1,4 @@
-import { createConsumer } from 'rest-ts-axios';
+import { createConsumer } from '@noodletired/rest-ts-axios';
 import axios from 'axios';
 import { todoAPI } from './testAPI';
 

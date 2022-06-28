@@ -5,8 +5,7 @@
 import { BadRequestHttpException } from '@senhung/http-exceptions';
 import * as express from 'express';
 
-import { ApiDefinition, EndpointDefinition, buildGenericPathname, ExtractRuntimeType, deserialize } from 'rest-ts-core';
-import { Tuple2Dict } from 'rest-ts-core';
+import { ApiDefinition, EndpointDefinition, buildGenericPathname, ExtractRuntimeType, Tuple2Dict, deserialize } from '@noodletired/rest-ts-core';
 
 /**
  * A promise of T or just T.
