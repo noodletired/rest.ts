@@ -60,5 +60,13 @@ export const todoAPI = defineAPI({
 
     protoBodyAndResponse: POST `/withProto`
         .response(protoBasedResponse)
-        .body(protoBasedRequest)
+        .body(protoBasedRequest),
+
+    teapotError: GET `/teapot`,
+
+    abortRequest: GET `/abortRequest`
+        .query(rt.Record({
+            delay: rt.String // query parameters can only be strings
+        }))
+        .response(rt.String)
 });

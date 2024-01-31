@@ -15,7 +15,7 @@
             "es2015"
         ],
         "paths": {
-            "@noodletired/rest-ts-*": ["./rest-ts-*"]
+            "@noodletired/rest-ts-core": ["./rest-ts-core/src/index.ts"]
         }
     }
 }

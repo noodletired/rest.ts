@@ -1,3 +1,4 @@
+import { IMATeapotHttpException } from '@senhung/http-exceptions';
 import { todoAPI } from './testAPI';
 import { buildRouter } from '@noodletired/rest-ts-express';
 
@@ -47,5 +48,28 @@ export const router = buildRouter(todoAPI, (builder) => builder
     })
     .optionalQueryParams(async (req, res) => {
         res.end(); // no-op, but does not 404
+    })
+    .teapotError(() => {
+        throw new IMATeapotHttpException();
+    })
+    .abortRequest(async (req, res) => {
+        let aborted = false;
+        req.on('close', () => {
+            aborted = true;
+        });
+
+        const delay = parseInt(req.query.delay);
+        const slices = 10;
+        const sliceDelay = delay / slices;
+        for (let i = 1; i <= slices; ++i) {
+            if (aborted) {
+                console.debug('Aborted!');
+                break;
+            }
+            console.debug(`Doing work slice ${i}...`);
+            await new Promise(r => setTimeout(r, sliceDelay));
+        }
+
+        return 'OK';
     })
 );

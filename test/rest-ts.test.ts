@@ -4,6 +4,7 @@ import * as express from 'express';
 import * as http from 'http';
 import { json } from 'body-parser';
 import { ClassBasedRequest } from './fixtures/DTOs';
+import { CanceledError } from 'axios';
 
 const port = 3000
 const apiMountPoint = '/api';
@@ -15,7 +16,7 @@ beforeAll(async () => {
     app.use(json());
     app.use(apiMountPoint, router);
     server.on('request', app);
-    
+
     await new Promise<void>((resolve) => {
         server.listen(port, resolve);
     });
@@ -107,17 +108,17 @@ test('request body', async () => {
 });
 
 test('constrained request body', async () => {
-	const dateString = new Date().toISOString();
-	const response = await client.constrainedRequestBody({
-			body: {
-					title: 'abc',
-					done: dateString,
-					type: 'shopping'
-			}
-	});
-	expect(response.data.title).toEqual('abc');
-	expect(response.data.done).toEqual(dateString);
-	expect(response.data.type).toEqual('shopping');
+    const dateString = new Date().toISOString();
+    const response = await client.constrainedRequestBody({
+            body: {
+                    title: 'abc',
+                    done: dateString,
+                    type: 'shopping'
+            }
+    });
+    expect(response.data.title).toEqual('abc');
+    expect(response.data.done).toEqual(dateString);
+    expect(response.data.type).toEqual('shopping');
 });
 
 test('bad request body', async () => {
@@ -134,7 +135,7 @@ test('no response', async () => {
     // An endpoint with no response will yield a 404
     try {
         await client.noRepsonseEndpoint();
-        fail('Expected an exception');
+        expect('Expected an exception').toBeNull();
     } catch (e) {
         // @ts-expect-error: unknown error type
         expect(e.response.status).toEqual(404);
@@ -168,4 +169,27 @@ test('Query param simplification', async () => {
     // This compiles because the query has no mandatory query parameters. The simplification
     // allows us to omit the argument entirely instead of having to pass in { query: {} }.
     await client.optionalQueryParams();
+});
+
+test('Teapot exception', async () => {
+    try {
+        await client.teapotError();
+        expect('Expected an exception').toBeNull();
+    } catch (e) {
+        // @ts-expect-error: unknown error type
+        expect(e.response.status).toEqual(418);
+    }
+});
+
+test('Cancel request', async () => {
+    expect.assertions(1);
+    // @ts-ignore 2304 -- node tslib doesn't have AbortController but we compile against jsdom
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 50);
+    const promise = client.abortRequest({
+        query: { delay: '100' },
+        signal: controller.signal
+    });
+    await expect(promise).rejects.toBeInstanceOf(CanceledError);
+    await new Promise(r => setTimeout(r, 15)); // cleanup time
 });

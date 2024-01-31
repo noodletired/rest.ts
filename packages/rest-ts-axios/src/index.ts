@@ -19,7 +19,7 @@ type RouteConsumerParams<T extends EndpointDefinition> = {
         ExtractRuntimeType<T[K]>;
 } & AxiosRequestConfig;
 
-type UnknownRouteConsumerParams = {
+type UnknownRouteConsumerParams = Omit<AxiosRequestConfig, 'method'|'url'|'params'|'data'> & {
     params?: { [key: string]: string };
     query: { [key: string]: unknown };
     body: unknown;
@@ -28,7 +28,7 @@ type UnknownRouteConsumerParams = {
 type RouteConsumerMandatoryArgument<T extends EndpointDefinition> = (params: RouteConsumerParams<T>) => Promise<TypedAxiosResponse<T>>;
 type RouteConsumerOptionalArgument<T extends EndpointDefinition> = (params?: RouteConsumerParams<T>) => Promise<TypedAxiosResponse<T>>;
 
-type RouteConsumer<T extends EndpointDefinition> = 
+type RouteConsumer<T extends EndpointDefinition> =
     // If the call takes no parameter, then make the argument optional
     KeyIfDefined<T, 'params' | 'body' | 'query'> extends never ? RouteConsumerOptionalArgument<T>
     // Otherwise, if the only parameter is the query,
@@ -48,30 +48,30 @@ type RouteConsumer<T extends EndpointDefinition> =
 
 /**
  * Thin wrapper around an instance of axios.
- * 
+ *
  * You can only obtain an ApiConsumer through {@link createConsumer}.
- * 
+ *
  * This object has a method defined for each endpoint of the API definition used to create it.
- * 
+ *
  * For instance, if your API definition has the following endpoints:
  * ```ts
- * const myCustomAPI = defineAPI({    
+ * const myCustomAPI = defineAPI({
  *     listPublications: GET `/publications/${'category'}` .response(Publications),
  *     addPublication: POST `/publications` .body(Article) .response(PublicationResponse),
  *     removePublication: DELETE `/publications/${'id'}` .response(RemoveResponse)
  * });
  * ```
- * 
+ *
  * Then, the ApiConsumer you obtain has the following methods:
  * ```ts
  * consumer.listPublications({ params: { category: string } }) => { data: Publications }
  * consumer.addPublication({ body: Article }) => { data: PublicationResponse }
  * consumer.removePublication({ params: { id: string } }) => { data: RemoveResponse }
  * ```
- * 
+ *
  * Note that, in addition to the types shown above, you may pass any option accepted in the
  * method parameter, and the object you get in response is an actual axios response.
- * These have been omitted from the example above for clarity.  
+ * These have been omitted from the example above for clarity.
  * If you are interested in the exact type definiton, feel free to browse the source code.
  * You will find that there is very little code logic, and that most of the work done by
  * this module happens in the type system, not the runtime.
@@ -82,17 +82,17 @@ export type ApiConsumer<T extends ApiDefinition> = {
 
 /**
  * Bind an API definition to an instance of axios.
- * 
+ *
  * Use this method as a factory to make {@link ApiConsumer}s from {@link ApiDefinition}s.
- * 
+ *
  * Use the returned object to make requests against the chosen API.
- * 
+ *
  * ## Example
- * 
+ *
  * ```ts
  * // Step 1: Import the API definition you created with `rest-ts-core`
  * import { myCustomAPI } from 'shared/apis/myCustomAPI';
- * 
+ *
  * // Step 2: Create an axios instance with a given base URL.
  * // You can also customize global settings such as authentication or custom headers.
  * // Refer to the docs for axios to see all of the available settings.
@@ -100,10 +100,10 @@ export type ApiConsumer<T extends ApiDefinition> = {
  *   baseURL: 'http://localhost:3000/api',
  *   // You can add global settings here such as authentication headers
  * });
- * 
+ *
  * // Step 3: Bind the API definition to the axios instance
  * const consumer = createConsumer(myCustomAPI, driver);
- * 
+ *
  * // Step 4: You can now use this object in your application to make HTTP calls to your backend:
  * const res = consumer.listAllPublications({
  *     // The parameters that you defined in your API will be required here.
@@ -114,7 +114,7 @@ export type ApiConsumer<T extends ApiDefinition> = {
  *     }
  * });
  * ```
- * 
+ *
  * @param apiDefinition The API definition to bind.
  * @param axios An axios instance
  */
@@ -134,6 +134,7 @@ function makeAxiosEndpoint<T extends EndpointDefinition>(axios: AxiosInstance, d
         const body = args != null ? args.body : undefined;
         const query = args != null ? args.query : undefined;
         const cfg: AxiosRequestConfig = {
+            ...(args ? args : {}),
             method: def.method,
             url: buildPathnameFromParams(def, params),
             params: query,

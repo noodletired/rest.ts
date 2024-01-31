@@ -22,5 +22,10 @@ module.exports = {
     "coveragePathIgnorePatterns": [
       "node_modules",
       "test"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    }
 }
