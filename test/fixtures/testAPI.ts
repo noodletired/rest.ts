@@ -32,13 +32,15 @@ export const todoAPI = defineAPI({
         .query(rt.Record({
             'mandatory': rt.String,
             'union': rt.Union(rt.Literal('true'), rt.Literal('false')),
-            'optional': rt.Optional(rt.String) // rt.Union(rt.String, rt.Undefined) actually expects the key...
+            'optional': rt.Optional(rt.String), // rt.Union(rt.String, rt.Undefined) actually expects the key...
+            // 'illegal': rt.Number - numbers are banned, you'll see "can't assign to never" error
         }))
         .response(QueryParamsResponse),
 
     optionalQueryParams: GET `/query/optional`
         .query({
-            'maybeParam': '' as string | undefined
+            'maybeParam': '' as string | undefined,
+            // 'illegal': 70 - numbers are banned
         }),
 
     simpleRequestBody: POST `/simpleBody`
@@ -66,7 +68,8 @@ export const todoAPI = defineAPI({
 
     abortRequest: GET `/abortRequest`
         .query(rt.Record({
-            delay: rt.String // query parameters can only be strings
+            delay: rt.String, // query parameters can only be strings
+            // test: rt.Number // this should error
         }))
         .response(rt.String)
 });

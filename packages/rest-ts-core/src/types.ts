@@ -3,7 +3,7 @@
  */
 
 import * as rt from 'runtypes';
-import { DTO_Type } from './private/base-types';
+import { DTO_Type, Dictionary, ExtractRuntimeType } from './private/base-types';
 
 // Core type framework of this package
 
@@ -13,24 +13,29 @@ export interface AEndpointBuilder<T> {
 
 /**
  * List of the supported HTTP methods.
- * 
+ *
  * If you think something is missing here, feel free to open a pull request.
  */
 export type HttpMethod = 'GET' | 'PUT' | 'POST' | 'DELETE' | 'PATCH';
 
 /**
- * Object containing the query parameters accepted by an endpoint. 
+ * Object containing the query parameters accepted by an endpoint.
  */
-export type QueryParams = { [K: string]: QueryParamType };
+export type QueryParams = rt.Record<Dictionary<rt.Runtype<any>>, false> | Dictionary<any>;
 
 /**
- * Type of an individual query parameter.
+ * Templated QueryParams checks to block invalid types.
  */
-export type QueryParamType = rt.Runtype<any> | any;
+export type SafeQueryParams<T extends rt.Runtype | Dictionary<string | undefined>> =
+    T extends rt.Runtype ?
+        QuerySafeKeys<ExtractRuntimeType<T>> extends never ?
+            never : T
+    : Dictionary<string | undefined>;
+type QuerySafeKeys<T> = T extends { [K in keyof T]: string | undefined } ? T : never;
 
 /**
  * Typed definition of an individual REST endpoint.
- * 
+ *
  * Users of Rest.ts normally don't interact with this type directly. Libraries will
  * extract the relevant information from this type in order to provide a user-friendly
  * interface for API producers or consumers.
@@ -46,7 +51,7 @@ export interface EndpointDefinition {
 
 /**
  * Complete type definition of a REST API.
- * 
+ *
  * For most users, this type should be treated as an opaque type.
  * You will pass objects of type ApiDefinition to a method of
  * `rest-ts-express`, `rest-ts-core`, or any compatible library, and that
