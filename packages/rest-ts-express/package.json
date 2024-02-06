@@ -1,12 +1,12 @@
 {
     "name": "@noodletired/rest-ts-express",
-    "version": "0.7.5",
+    "version": "0.7.6",
     "description": "Type-safe rest API definitions for express",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "peerDependencies": {
         "express": "^4.18.1",
-        "@noodletired/rest-ts-core": "^0.7.5"
+        "@noodletired/rest-ts-core": "^0.7.6"
     },
     "files": [
         "dist"
