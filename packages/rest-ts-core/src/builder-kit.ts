@@ -145,6 +145,7 @@ export class EndpointBuilder<T extends Partial<EndpointDefinition>> implements A
      *
      * @param query type of the query parameters.
      */
+    // @ts-ignore: possibly very deep type checks but it's safe
     public query<U extends QueryParams>(query: SafeQueryParams<U>): EndpointBuilder<RemoveKey<T, 'query'> & { query: SafeQueryParams<U> }> {
         return new EndpointBuilder<T & { query: SafeQueryParams<U> }>(Object.assign({}, this.def, { query }));
     }

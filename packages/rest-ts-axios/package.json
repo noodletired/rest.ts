@@ -1,12 +1,12 @@
 {
     "name": "@noodletired/rest-ts-axios",
-    "version": "0.7.4",
+    "version": "0.7.5",
     "description": "Type-safe rest API definitions for axios",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "peerDependencies": {
         "axios": "^0.27.2",
-        "@noodletired/rest-ts-core": "^0.7.4"
+        "@noodletired/rest-ts-core": "^0.7.5"
     },
     "files": [
         "dist"
